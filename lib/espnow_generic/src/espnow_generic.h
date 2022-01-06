@@ -34,6 +34,9 @@
   esp_now_peer_info_t peerInfo;
 #endif
 
+/**
+ * @brief A random key that will be used for encryption
+ */
 uint8_t _lmk[] = 
   {0x84, 0x0D, 0x8E, 0xAB, 
    0xB9, 0x37, 0x8E, 0xAB,

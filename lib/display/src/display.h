@@ -18,7 +18,7 @@
 #include <U8x8lib.h>
 
 #ifdef HELTEC_WIFI_KIT_8
-  #pragma message "Using Heltec Wifikit 8 definition for u8g2"
+  #pragma message "Using Heltec Wifikit 8 definition for u8x8"
   #define _DISPLAY_RES_X 128
   #define _DISPLAY_RES_Y 32
   //U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ 16, /* clock=*/ 5, /* data=*/ 4);   // pin remapping with ESP8266 HW I2C

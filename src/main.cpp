@@ -18,7 +18,7 @@
 
 struct_message myData;
 
-unsigned long timerDelay = 2000;  // send readings timer
+
 
 #ifdef ESPNOW_CONTROLLER
   #ifdef ESP32
@@ -97,13 +97,15 @@ void setup() {
 
 void loop() {
   #ifdef ESPNOW_CONTROLLER
+  static const unsigned long timerDelay = 2000;  // send readings timer
   static unsigned long lastTime = 0;
 
   if ((millis() - lastTime) > timerDelay) {
-    strcpy(myData.a, "THIS IS A CHAR");
-    myData.b = random(1,20);
-    myData.c = 1.2;
-    myData.d = false;
+    strcpy(myData.a, "THIS IS A CHAR");  // Char data
+    myData.b = random(1,20);             // Int data
+    //myData.c = 1.2;
+    myData.c = (random(1000)/100.0);     // Float data
+    myData.d = (random(10)>5);           // Boolean data
 
     // Send message via ESP-NOW
     PRINTLNS("Sending data...");
