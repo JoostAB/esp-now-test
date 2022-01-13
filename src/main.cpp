@@ -55,6 +55,10 @@ struct_message myData;
 void setup() {
   Serial.begin(SERIALBAUDRATE);
   
+  #ifdef M5STACK_FIRE
+  M5.begin();
+  M5.Power.begin();
+  #endif
   #ifdef HAS_DISPLAY
     display_setup(true);
   #endif
@@ -89,6 +93,7 @@ void setup() {
   
   #ifdef ESPNOW_CONTROLLER
     espnow_addpeer(peerAddress, 0);
+    espnow_addpeer(broadcastAddress, 0);
     esp_now_register_send_cb(OnDataSent);
   #else
     esp_now_register_recv_cb(onDataReceiver);
@@ -100,6 +105,14 @@ void loop() {
   static const unsigned long timerDelay = 2000;  // send readings timer
   static unsigned long lastTime = 0;
 
+#ifdef M5STACK_FIRE
+  M5.update();
+#endif
+
+#ifdef HAS_DISPLAY
+  display_update();
+#endif
+
   if ((millis() - lastTime) > timerDelay) {
     strcpy(myData.a, "THIS IS A CHAR");  // Char data
     myData.b = random(1,20);             // Int data
@@ -108,8 +121,12 @@ void loop() {
     myData.d = (random(10)>5);           // Boolean data
 
     // Send message via ESP-NOW
-    PRINTLNS("Sending data...");
-    esp_now_send(peerAddress, (uint8_t *) &myData, sizeof(myData));
+    // PRINTLNS("Sending data...");
+    // esp_now_send(peerAddress, (uint8_t *) &myData, sizeof(myData));
+
+    PRINTLNS("Broadacsting data...");
+    esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+    
 
     lastTime = millis();
 

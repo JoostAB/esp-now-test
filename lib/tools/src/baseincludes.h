@@ -15,6 +15,12 @@
 #include <Arduino.h>
 #include <debug.h>
 
+#ifdef M5STACK_FIRE
+// Uncomment next line if Accelerometer/Gyroscope is to be used
+// #define M5STACK_MPU6886 1 
+#include <M5Stack.h>
+#endif
+
 #define XQUOTE(x) #x
 #define QUOTE(x) XQUOTE(x)
 
