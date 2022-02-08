@@ -38,6 +38,10 @@ The controller is responsible for communication to the outside world over standa
 
 Which device is the controller doesn't matter, since there is no hardware difference. All nodes are ESP32/ESP8266 based, and therefore they are all capable of communicating with a wireless network. The controller role is dynamically assigned (see [Controller selection](#controller-selection)) among the available nodes, and as soon the node player the controller role is offline, a new controller is chosen.
 
+### Network ID
+
+### Node category
+
 ## Slave
 
 When a slave is turned on, it will send an [introduction message](#introduction-message) to the broadcast (MAC)address `FF:FF:FF:FF:FF:FF`. The introduction message contains the MAC address of the slave and name for easy recognition. It also contains a unique ID of the network it wants to connect to. For now this ID is hard coded, so it will have to be included at compile time for all nodes intended for the same network.  
@@ -124,13 +128,13 @@ All `char[x]` fields **may** be shortened using a NULL termination. If no NULL b
 
 The Introdction message is send when a node powered up. It kinda says "Hello everybody. My name is John, this is what I do and who is the boss?". The message contains the following data:
 
-| descr | type | data |
-|-|-|-|
-| Message type | int8 | 1 |
-| MAC address | byte[6] | A1:B2:C3:D4:E5:F6 |
-| Network UUID | byte[16] | 3d0bb7a9-f3e3-4fa5-86b7-b5f0aeca41ad |
-| Category | int8 | 1 |
-| Friendly name | char[30] | "light livingroom" |
+| name | type | data | description |
+|-|-|-|-|
+| Message type | int8 | 1 | Code for messagetype |
+| MAC address | byte[6] | A1:B2:C3:D4:E5:F6 | MAC address if this node |
+| Network UUID | byte[16] | 3d0bb7a9-f3e3-4fa5-86b7-b5f0aeca41ad | See [Network ID](#network-id) |
+| Category | int8 | 1 | See [Node category](#node-category) |
+| Friendly name | char[30] | "light livingroom" | Descriptive name |
 
      t
      y                  C
@@ -144,10 +148,10 @@ The Introdction message is send when a node powered up. It kinda says "Hello eve
 
 The Welcome message is the response of the controller to an [Introcuction message](#introduction-message). Is basically says "Hi John, welcome. I'll write you down as a new member if this network, and from now on you only talk to me."
 
-| descr | type | data |
-|-|-|-|
-| Message type | int8 | 2 |
-| MAC address | byte[6] | A1:B2:C3:D4:E5:F6 |
+| name | type | data | description |
+|-|-|-|-|
+| Message type | int8 | 2 | Code for messagetype |
+| MAC address | byte[6] | A1:B2:C3:D4:E5:F6 | Mac address of the controller |
 
      t
      y        
@@ -161,9 +165,9 @@ The Welcome message is the response of the controller to an [Introcuction messag
 
 When a new node has become a member of a network (eg, the controller has responded to the [Introduction Message](#introduction-message) with a [Welcome message](#welcome-message)), the node can ask for configuration data. This data is needed if this node wants to be a backup controller node (see [Controller Selection](#controller-selection)) in case the current controller goes down or loses wifi connectivity.
 
-| descr | type | data |
-|-|-|-|
-| Message type | int8 | 3 |
+| name | type | data | description |
+|-|-|-|-|
+| Message type | int8 | 3 | Code for messagetype |
 
      t
      y        
@@ -177,15 +181,15 @@ When a new node has become a member of a network (eg, the controller has respond
 
 The response to the [Request Config Message](#request-config-message). This message contains all data that is needed to take over the role of controller. Being wifi and mqtt credentials.
 
-| descr | type | data |
-|-|-|-|
-| Message type | int8 | 4 |
-| WiFi SSID | char[32] | My-wifi |
-| WiFi Key | char[64] | ***** |
-| IP MQTT broker| byte[6] | A1:B2:C3:D4:E5:F6 |
-| MQTT port | int16 | 1883 |
-| MQTT user | char[20] | user |
-| MQTT password | char[20] | ***** |
+| name | type | data | description |
+|-|-|-|-|
+| Message type | int8 | 4 | Code for messagetype |
+| WiFi SSID | char[32] | My-wifi | SSID of your network |
+| WiFi Key | char[64] | ***** | Authorization key for network |
+| IP MQTT broker| byte[6] | A1:B2:C3:D4:E5:F6 | IP address of MQTT broker |
+| MQTT port | int16 | 1883 | Port of MQTT broker |
+| MQTT user | char[20] | user | MQTT user (blank if none) |
+| MQTT password | char[20] | ***** | MQTT password (blank if none) |
 
      t                           P
      y                           o
@@ -199,11 +203,11 @@ The response to the [Request Config Message](#request-config-message). This mess
 
 ### Data message (`data - 5`)
 
-| descr | type | data |
-|-|-|-|
-| Message type | int8 | 5 |
-| Data type | int8 | 1 |
-| Data | char[240] | whatever |
+| name | type | data | description |
+|-|-|-|-|
+| Message type | int8 | 5 | Code for messagetype |
+| Data type | int8 | 1 | Code to describe type of data |
+| Data | char[240] | whatever | The data itself |
 
      M D
      t t         
