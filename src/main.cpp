@@ -98,6 +98,10 @@ void setup() {
   #else
     esp_now_register_recv_cb(onDataReceiver);
   #endif
+
+  AenWelcomeMessage welc;
+  sendAenMessage(&welc);
+  
 }
 
 void loop() {
